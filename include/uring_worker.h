@@ -30,6 +30,10 @@ struct UringRequest
 class UringWorker
 {
 public:
+	void start(){
+		io_uring_queue_init(MAX_QUEUE_DEPTH, &ring, 0);
+
+	}
 	virtual void init() {}
 	virtual void deinit(){};
 
@@ -52,7 +56,6 @@ public:
 			this->init();
 		});
 
-		io_uring_queue_init(MAX_QUEUE_DEPTH, &ring, 0);
 
 
 		struct io_uring_cqe *cqe = nullptr;

@@ -114,8 +114,7 @@ int setup_listening_socket(int port) {
 	/* We bind to a port and turn this socket into a listening
 	 * socket.
 	 * */
-	if (bind(sock,
-				(const struct sockaddr *)&srv_addr,
+	if (bind(sock, (const struct sockaddr *)&srv_addr,
 				sizeof(srv_addr)) < 0)
 		fatal_error("bind()");
 
