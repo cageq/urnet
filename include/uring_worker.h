@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include "logger.h"
 
-#define MAX_QUEUE_DEPTH 256
+#define MAX_QUEUE_DEPTH 4
 enum UringEventType
 {
 	URING_EVENT_ACCEPT = 1,
