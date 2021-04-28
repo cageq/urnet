@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include "logger.h"
 
-#define MAX_QUEUE_DEPTH 4
+#define MAX_QUEUE_DEPTH 32
 enum UringEventType
 {
 	URING_EVENT_ACCEPT = 1,
@@ -30,9 +30,8 @@ struct UringRequest
 class UringWorker
 {
 public:
-	void start(){
+	UringWorker(){
 		io_uring_queue_init(MAX_QUEUE_DEPTH, &ring, 0);
-
 	}
 	virtual void init() {}
 	virtual void deinit(){};

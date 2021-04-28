@@ -34,7 +34,6 @@ class TcpListener
 				return false;
 			}
 
-			net_worker.start(); 
 			do_accept(); 
 			net_worker.run(); 
 			return true;
