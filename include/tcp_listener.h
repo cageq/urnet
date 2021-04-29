@@ -1,9 +1,7 @@
 #pragma once
-#include "uring_worker.h"
-
+#include "uring_worker.h" 
 class TcpListener
 {
-
 	public:
 		bool start(int16_t port)
 		{
@@ -20,7 +18,6 @@ class TcpListener
 			bindAddr.sin_family = AF_INET;
 			bindAddr.sin_port = htons(port);
 			bindAddr.sin_addr.s_addr = htonl(INADDR_ANY); //opt.host
-
 			ret = bind(listen_sock, (const struct sockaddr *)&bindAddr, sizeof(bindAddr));
 			if (ret < 0)
 			{ 
@@ -37,6 +34,12 @@ class TcpListener
 			do_accept(); 
 			net_worker.run(); 
 			return true;
+		}
+
+		void stop(){
+
+			net_worker.stop(); 
+
 		}
 
 		int do_accept()

@@ -33,6 +33,14 @@ public:
 	UringWorker(){
 		io_uring_queue_init(MAX_QUEUE_DEPTH, &ring, 0);
 	}
+
+	void stop(){
+
+		io_uring_queue_exit(&ring);
+
+	}
+
+
 	virtual void init() {}
 	virtual void deinit(){};
 
