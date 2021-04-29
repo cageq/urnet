@@ -52,5 +52,5 @@ target_link_libraries(server uring  fmt)
 
 
 
-add_executable(web src/web.c) 
+add_executable(web src/web.cpp) 
 target_link_libraries(web uring  fmt  )
