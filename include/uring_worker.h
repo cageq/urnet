@@ -15,8 +15,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
-
 #include "logger.h"
 
 #define MAX_QUEUE_DEPTH 32
@@ -71,9 +69,7 @@ class UringWorker
 		}
 
 		void stop(){
-
 			io_uring_queue_exit(&ring);
-
 		}
 
 

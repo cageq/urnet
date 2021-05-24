@@ -1,7 +1,6 @@
 
 #include <csignal>
 #include "tcp_listener.h"
-
 #include "mysession.h"
 TcpListener<MySession> *kTcpListener;
 void signal_handler(int signo)
