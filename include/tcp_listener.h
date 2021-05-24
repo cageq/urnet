@@ -35,15 +35,13 @@ class TcpListener
 			}
 			net_worker = std::make_shared<UringWorker>(); 
 
-		 	do_accept(); 
+			do_accept(); 
 			net_worker->run(); 
 			return true;
 		}
 
 		void stop(){
-
 			net_worker->stop(); 
-
 		}
 
 		int do_accept()
@@ -55,11 +53,8 @@ class TcpListener
 
 			auto req = new UringRequest([this](struct io_uring_cqe *cqe){
 					dlog("on accept new connection ");  
-					
 					auto conn =  new T(); 
-
 					conn->init(cqe->res, this->net_worker); 
-
 
 					do_accept(); 
 					}, URING_EVENT_ACCEPT ); 
@@ -69,7 +64,7 @@ class TcpListener
 		}
 
 		void do_read(){
-			
+
 		}
 
 	private:
