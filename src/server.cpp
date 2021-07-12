@@ -20,5 +20,6 @@ int main(int argc, char *argv[])
 	kTcpListener = &tcpListener;
 	tcpListener.start(9900);
 
+	dlog("quit normally"); 
 	return 0;
 }

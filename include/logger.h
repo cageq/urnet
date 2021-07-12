@@ -19,40 +19,40 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/rotating_file_sink.h"
- 
+
 #define dout  std::cout 
 
 class KNetLogger : public knet::utils::Singleton<KNetLogger>{
-public: 
-    KNetLogger(){
-        logger = std::make_shared<spdlog::logger>("knet");
-	logger->set_level(spdlog::level::trace);  
-    }
+	public: 
+		KNetLogger(){
+			logger = std::make_shared<spdlog::logger>("urnet");
+			logger->set_level(spdlog::level::trace);  
+		}
 
-    void add_console(){
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();      
-        logger->sinks().emplace_back(console_sink);       
-    }
+		void add_console(){
+			auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();      
+			logger->sinks().emplace_back(console_sink);       
+		}
 
-    void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
-        auto file_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(filePath, hour, minute);
-        logger->sinks().emplace_back(file_sink); 
-    }
+		void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
+			auto file_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(filePath, hour, minute);
+			logger->sinks().emplace_back(file_sink); 
+		}
 
-    void use_logger(std::shared_ptr<spdlog::logger> lg){
-        logger = lg; 
-    }
+		void use_logger(std::shared_ptr<spdlog::logger> lg){
+			logger = lg; 
+		}
 
-    spdlog::logger & get_logger(){
-        return *logger; 
-    }
+		spdlog::logger & get_logger(){
+			return *logger; 
+		}
 
-    std::shared_ptr<spdlog::logger> logger; 
+		std::shared_ptr<spdlog::logger> logger; 
 };
 
 
 #define  KNetLogIns KNetLogger::instance()
- 
+
 #define ilog(format, args...) KNetLogIns.get_logger().info(format, ##args)
 #define dlog(format, args...) KNetLogIns.get_logger().debug(format, ##args)
 #define wlog(format, args...) KNetLogIns.get_logger().warn(format, ##args)
@@ -65,25 +65,25 @@ public:
 #include "file_sink.hpp"
 
 class KNetLogger : public knet::utils::Singleton<KNetLogger>{
-    public: 
-     void add_console(){
-        kLogIns.add_sink<klog::ConsoleSink<std::mutex, true> >(); 
-     }
+	public: 
+		void add_console(){
+			kLogIns.add_sink<klog::ConsoleSink<std::mutex, true> >(); 
+		}
 
-     void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
+		void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
 
-             kLogIns.add_sink<klog::FileSink<> >(filePath);
-     }
+			kLogIns.add_sink<klog::FileSink<> >(filePath);
+		}
 }; 
 
 
 #define  KNetLogIns KNetLogger::instance()
-  
+
 #endif // KNET_LOG_SPDLOG  
 
 
 #else 
- 
+
 #define ilog(format, args...) 
 #define dlog(format, args...)
 #define wlog(format, args...)
@@ -92,12 +92,12 @@ class KNetLogger : public knet::utils::Singleton<KNetLogger>{
 #define dout  std::cout 
 
 class KNetLogger : public knet::utils::Singleton<KNetLogger>{
-    public: 
-     inline void add_console(){
-     }
+	public: 
+		inline void add_console(){
+		}
 
-     inline void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
-     }
+		inline void add_file(const std::string & filePath, uint32_t hour, uint32_t minute ){
+		}
 }; 
 
 

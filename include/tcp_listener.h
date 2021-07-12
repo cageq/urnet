@@ -34,6 +34,7 @@ class TcpListener
 				return false;
 			}
 			net_worker = std::make_shared<UringWorker>(); 
+			workers.emplace_back(net_worker); 
 
 			do_accept(); 
 			net_worker->run(); 
@@ -46,21 +47,31 @@ class TcpListener
 
 		int do_accept()
 		{ 
-			struct sockaddr_in cliAddr;
-			socklen_t cliAddrLen = sizeof(cliAddr); 
-			struct io_uring_sqe *sqe = net_worker->get_sqe();
-			io_uring_prep_accept(sqe, listen_sock, (struct sockaddr *)&cliAddr, &cliAddrLen, 0);
+			auto worker = get_worker(); 
+			if (worker){
+				struct sockaddr_in cliAddr;
+				socklen_t cliAddrLen = sizeof(cliAddr); 
+				struct io_uring_sqe *sqe = worker->get_sqe();
+				io_uring_prep_accept(sqe, listen_sock, (struct sockaddr *)&cliAddr, &cliAddrLen, 0);
+				auto req = new UringRequest([=](struct io_uring_cqe *cqe){
+						auto conn =  new T(); 
+						conn->init(cqe->res, worker); 
+						do_accept(); 
+						}, URING_EVENT_ACCEPT ); 
 
-			auto req = new UringRequest([this](struct io_uring_cqe *cqe){
-					dlog("on accept new connection ");  
-					auto conn =  new T(); 
-					conn->init(cqe->res, this->net_worker); 
+				worker->submit_request(sqe, req);  
+			} else {
 
-					do_accept(); 
-					}, URING_EVENT_ACCEPT ); 
-
-			net_worker->submit_request(sqe, req);  
+				elog("no worker found"); 
+			}
+			
 			return 0;
+		}
+
+		UringWorkerPtr get_worker(){
+			static uint64_t worker_index = 0; 
+
+			return workers[worker_index++  % workers.size()]; 
 		}
 
 		void do_read(){
@@ -68,6 +79,9 @@ class TcpListener
 		}
 
 	private:
+		std::vector<UringWorkerPtr> workers; 
+
+		
 		UringWorkerPtr net_worker;
 		int listen_sock;
 };

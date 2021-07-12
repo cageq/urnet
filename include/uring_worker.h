@@ -108,6 +108,7 @@ class UringWorker
 
 				if (cqe->res < 0)
 				{
+					dlog("res is {}, quitting", strerror(cqe->res)); 	
 					return;
 				}
 
