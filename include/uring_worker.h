@@ -87,9 +87,10 @@ class UringWorker
 			io_uring_submit(&ring);
 		}
 
-		void run()
+		void run(const std::function<void()>  & initor)
 		{
 
+			initor(); 
 			std::call_once(init_flag, [&]() {
 					this->init();
 					});
@@ -101,16 +102,18 @@ class UringWorker
 
 				dlog("uring wait cqe is {}", ret); 
 				auto req = (UringRequest *)cqe->user_data;
+
+				if (cqe->res < 0)
+				{
+					fprintf(stderr, "Async request failed: %s for event: %d\n", strerror(-cqe->res), req->event_type);
+					dlog("res is {}, quitting", strerror(cqe->res)); 	
+					return;
+				}
 				if (ret < 0)
 				{
 					continue;
 				}
 
-				if (cqe->res < 0)
-				{
-					dlog("res is {}, quitting", strerror(cqe->res)); 	
-					return;
-				}
 
 				req->callback(cqe);
 				io_uring_cqe_seen(&ring, cqe);

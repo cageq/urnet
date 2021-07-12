@@ -36,8 +36,11 @@ class TcpListener
 			net_worker = std::make_shared<UringWorker>(); 
 			workers.emplace_back(net_worker); 
 
+			net_worker->run([this](){
+					
 			do_accept(); 
-			net_worker->run(); 
+					
+					}); 
 			return true;
 		}
 
@@ -80,8 +83,6 @@ class TcpListener
 
 	private:
 		std::vector<UringWorkerPtr> workers; 
-
-		
 		UringWorkerPtr net_worker;
 		int listen_sock;
 };
