@@ -33,19 +33,17 @@ class TcpListener
 				elog("listen error "); 
 				return false;
 			}
-			net_worker = std::make_shared<UringWorker>(); 
-			workers.emplace_back(net_worker); 
+			lis_worker = std::make_shared<UringWorker>(); 
+			workers.emplace_back(lis_worker); 
 
-			net_worker->run([this](){
-					
-			do_accept(); 
-					
+			lis_worker->run([this](){
+					do_accept(); 
 					}); 
 			return true;
 		}
 
 		void stop(){
-			net_worker->stop(); 
+			lis_worker->stop(); 
 		}
 
 		int do_accept()
@@ -83,6 +81,6 @@ class TcpListener
 
 	private:
 		std::vector<UringWorkerPtr> workers; 
-		UringWorkerPtr net_worker;
+		UringWorkerPtr lis_worker;
 		int listen_sock;
 };

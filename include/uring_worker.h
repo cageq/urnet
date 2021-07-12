@@ -114,7 +114,6 @@ class UringWorker
 					continue;
 				}
 
-
 				req->callback(cqe);
 				io_uring_cqe_seen(&ring, cqe);
 				delete req;
